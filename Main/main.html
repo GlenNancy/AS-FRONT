@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Protótipo AS — Página Longa</title>
+    <link rel="stylesheet" href="main.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Montserrat:wght@600;700&display=swap"
+        rel="stylesheet">
+    <script>
+        (function () {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                // sem token → leva pro login/registro
+                window.location.href = '../Login_Register/login_register.html';
+            } else {
+            }
+        })();
+    </script>
+
+</head>
+
+<body>
+    <div class="wrap">
+
+        <header class="conteudo" role="banner" aria-label="Hero AS">
+            <button id="btnLogout" class="logout-btn">Sair</button>
+            <div class="conteudo-left">
+                <div class="gestao-performace as">AS – Gestão & Performance</div>
+                <h1>A AS nasce para desenvolver pessoas e formar pensadores críticos.</h1>
+                <p class="introducao">A inteligência artificial avança — nós desenvolvemos as habilidades humanas que
+                    continuam insubstituíveis: comunicação, gestão, inteligência emocional e performance.</p>
+
+                <div class="lista-corpo">
+                    <button class="botao botao-primario" onclick="mostrarPesquisa()">
+                        Contribuir com o Teste
+                    </button>
+                    <button class="botao botao-fantasma"
+                        onclick="document.getElementById('sobreAS').scrollIntoView({behavior:'smooth'})">O que é a
+                        AS?</button>
+                    <button class="botao botao-fantasma"
+                        onclick="document.getElementById('contato').scrollIntoView({behavior:'smooth'})">Contato</button>
+                </div>
+
+                <div style="margin-top:18px; color:var(--muted); font-size:13px; max-width:620px;">
+                    Ao contribuir você recebe material exclusivo e certificado quando nossa plataforma for lançada.
+                    Todas as respostas são 100% confidenciais.
+                </div>
+            </div>
+
+            <aside class="conteudo-right" aria-hidden="true">
+                <div class="mini-card">
+                    <h4>O que você ganha</h4>
+                    <p>Material exclusivo + certificado ao participar da pesquisa.</p>
+                </div>
+                <div class="mini-card">
+                    <h4>Tempo estimado</h4>
+                    <p>~ 7–12 minutos</p>
+                </div>
+                <div class="mini-card">
+                    <h4>Meta</h4>
+                    <p>Mapear dores e prioridades para novos cursos.</p>
+                </div>
+            </aside>
+        </header>
+
+        <!-- SOBRE / O QUE É A AS -->
+        <section id="sobreAS" class="informacoes-as" aria-labelledby="sobre-title">
+            <div class="card" role="region" aria-label="Sobre a AS">
+                <h3 id="sobre-title">O que é a AS</h3>
+                <p class="muted">A AS nasce exatamente para desenvolver pessoas de verdade: fortalecer habilidades
+                    humanas, formar pensadores críticos e preparar profissionais para o futuro. Trabalhamos com cursos e
+                    treinamentos em Comunicação, Gestão e Performance — nossa missão é evitar que pessoas fiquem para
+                    trás diante das mudanças tecnológicas.</p>
+
+                <div style="margin-top:12px;">
+                    <div class="notice" aria-hidden="false">
+                        <strong>Antes de começar…</strong>
+                        Pare por um minuto e seja brutalmente sincero. Use esse espaço para desabafar: fale do que te
+                        trava, do que falta no seu ambiente, do que te irrita e do que você precisa para evoluir. Não
+                        existe julgamento — suas respostas são confidenciais.
+                    </div>
+                </div>
+
+                <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+                    <div class="pill">Comunicação</div>
+                    <div class="pill">Gestão</div>
+                    <div class="pill">Tecnólogia</div>
+                    <div class="pill">Performance</div>
+                    <div class="pill">Inteligência Emocional</div>
+                </div>
+            </div>
+
+            <aside class="card" role="complementary" aria-label="Insights rápidos">
+                <h3>Insights rápidos</h3>
+                <p class="muted">As respostas vão nos ajudar a criar conteúdos mais práticos e profundos — preparados
+                    para o futuro.</p>
+                <div style="margin-top:12px;">
+                    <strong style="color:var(--white)">Como usaremos os dados</strong>
+                    <p class="muted">Para desenhar trilhas de aprendizado, módulos práticos e programas de mentoria que
+                        atendam às principais dores do mercado.</p>
+                </div>
+            </aside>
+        </section>
+
+        <!-- PESQUISA 1 (DETAILED) -->
+        <section id="pesquisas"></section>
+
+        <!-- Formulário: Receber Acesso por E-mail -->
+        <div class="card access-card" id="accessCard">
+            <h4>Receba o acesso</h4>
+            <p class="muted">Digite seu e-mail e clique em gerar acesso. Você receberá login e senha por e-mail.</p>
+
+            <input id="access-email" type="email" placeholder="seu@email.com" />
+
+            <button id="btnGenerateAccess" class="btn-primary">Enviar acesso por e-mail</button>
+
+
+            <div id="access-msg" class="muted" style="margin-top:10px; min-height:18px"></div>
+        </div>
+
+
+        <!-- FINAL / FOOTER -->
+        <footer id="contato" style="margin-top:36px;">
+            <div>
+                <strong style="color:var(--white)">AS — Gestão & Performance</strong>
+                <div class="muted" style="margin-top:6px;">Contato: contato@as-gestao.com · Direitos reservados © AS
+                </div>
+            </div>
+            <div style="text-align:right;">
+                <div class="muted">Siga-nos</div>
+                <div style="margin-top:6px;"><span class="pill">
+                    <a href="https://wa.me/551194337-0983
+                    " target="_blank">
+                            Falar no WhatsApp
+                    </a></span> <span class="pill">Instagram</span>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

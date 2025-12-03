@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login • AS — Gestão & Performance</title>
+    <link rel="stylesheet" href="login_register.css">
+</head>
+
+<body>
+    <main class="page-wrap">
+        <div class="hero">
+            <div class="hero-left">
+                <div class="badge">AS — Gestão &amp; Performance</div>
+                <h1 class="hero-title">A AS nasce para desenvolver pessoas e formar pensadores críticos.</h1>
+                <p class="hero-sub">A inteligência artificial avança — nós desenvolvemos as habilidades humanas que
+                    continuam insubstituíveis: comunicação, gestão, inteligência emocional e performance.</p>
+                <ul class="hero-list">
+                    <li><strong>Material exclusivo</strong> + certificado ao participar da pesquisa.</li>
+                    <li><strong>Tempo estimado</strong> ~ 7–12 minutos</li>
+                    <li><strong>Meta</strong> Mapear dores e prioridades para novos cursos.</li>
+                </ul>
+            </div>
+
+
+            <div class="hero-right">
+                <div class="card auth-card">
+                    <div class="tabs">
+                        <button id="tab-login" class="tab active">Entrar</button>
+                        <button id="tab-register" class="tab">Registrar</button>
+                    </div>
+
+
+                    <!-- LOGIN -->
+                    <form id="form-login" class="form">
+                        <label>Nome</label>
+                        <input id="login-nome" type="text" autocomplete="username" required />
+
+
+                        <label>Senha</label>
+                        <input id="login-senha" type="password" autocomplete="current-password" required />
+
+
+                        <button type="submit" class="btn-primary">Entrar</button>
+                        <div id="login-msg" class="msg"></div>
+                    </form>
+
+
+                    <!-- REGISTER -->
+                    <form id="form-register" class="form hidden">
+                        <label>Nome</label>
+                        <input id="reg-nome" type="text" required />
+
+
+                        <label>E‑mail</label>
+                        <input id="reg-email" type="email" autocomplete="email" required />
+
+
+                        <label>Senha</label>
+                        <input id="reg-senha" type="password" autocomplete="new-password" required />
+
+
+                        <button type="submit" class="btn-primary">Criar conta</button>
+                        <div id="reg-msg" class="msg"></div>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <script src="login_register.js"></script>
+</body>
+
+</html>

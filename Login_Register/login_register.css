@@ -1,0 +1,181 @@
+:root {
+    --bg: #0b0f13;
+    --card: #07121a;
+    --muted: #9aa6b2;
+    --accent: #1183ff;
+    --glass: rgba(255, 255, 255, 0.03);
+}
+
+* {
+    box-sizing: border-box;
+    font-family: Inter, 'Segoe UI', Roboto, system-ui, -apple-system, 'Helvetica Neue', Arial
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    background: linear-gradient(180deg, #061018 0%, #07121a 60%);
+    color: #e6eef6
+}
+
+.page-wrap {
+    max-width: 1200px;
+    margin: 32px auto;
+    padding: 20px
+}
+
+.hero {
+    display: grid;
+    grid-template-columns: 1.3fr 0.9fr;
+    gap: 28px;
+    align-items: start
+}
+
+.hero-left {
+    padding: 28px;
+    border-radius: 12px;
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+    box-shadow: 0 6px 30px rgba(2, 6, 23, 0.6)
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: rgba(17, 131, 255, 0.12);
+    color: var(--accent);
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 12px
+}
+
+.hero-title {
+    font-size: 34px;
+    line-height: 1.05;
+    margin: 6px 0 12px
+}
+
+.hero-sub {
+    color: var(--muted);
+    margin: 0 0 18px
+}
+
+.hero-list {
+    color: var(--muted);
+    list-style: none;
+    padding: 0;
+    margin: 0
+}
+
+.hero-list li {
+    background: var(--glass);
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 8px
+}
+
+.hero-right {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center
+}
+
+.card.auth-card {
+    width: 100%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6)
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px
+}
+
+.tab {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--muted);
+    cursor: pointer
+}
+
+.tab.active {
+    background: linear-gradient(90deg, rgba(17, 131, 255, 0.12), rgba(17, 131, 255, 0.06));
+    color: var(--accent);
+    border: 1px solid rgba(17, 131, 255, 0.14);
+    font-weight: 700
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px
+}
+
+.form.hidden {
+    display: none
+}
+
+label {
+    font-size: 13px;
+    color: var(--muted)
+}
+
+input[type=text],
+input[type=password],
+input[type=email],
+textarea {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--muted);
+    outline: none
+}
+
+input:focus {
+    box-shadow: 0 0 0 3px rgba(17, 131, 255, 0.06);
+    border-color: rgba(17, 131, 255, 0.14);
+    color: #e6eef6
+}
+
+.btn-primary {
+    padding: 10px;
+    border-radius: 10px;
+    border: 0;
+    background: linear-gradient(90deg, var(--accent), #2fb0ff);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer
+}
+
+.msg {
+    font-size: 13px;
+    color: var(--muted);
+    min-height: 20px
+}
+
+/* responsivo */
+@media (max-width:900px) {
+    .hero {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-left {
+        order: 2
+    }
+
+    .hero-right {
+        order: 1
+    }
+
+    .hero-title {
+        font-size: 24px
+    }
+}
