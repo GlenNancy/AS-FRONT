@@ -70,17 +70,26 @@ function renderizarPerguntas(perguntas) {
     return perguntas.map((p, i) => {
         const q = normalizePerguntaObject(p);
         const qId = q.id ?? q.Id ?? q.perguntaId ?? q.PerguntaId ?? `idx_${i}`;
+
+        // Texto principal da pergunta (vem de Texto/Text)
         const titulo = getField(q, ['titulo', 'Titulo', 'Texto', 'texto']) || `Pergunta ${i + 1}`;
-        const descricao = getField(q, ['descricao', 'Descricao']) || "";
+
+        // Aqui pegamos o TextoProvocativo ou Descricao, se existir
+        const descricao = getField(q, [
+            'descricao',
+            'Descricao',
+            'textoProvocativo',
+            'TextoProvocativo'
+        ]) || "";
 
         return `
         <div class="q-card" style="margin-bottom:12px;">
             <h4>${i + 1}. ${escapeHtml(titulo)}</h4>
-            ${descricao ? `<p>${escapeHtml(descricao)}</p>` : ''}
+            ${descricao ? `<p class="muted" style="margin:4px 0 10px 0;">${escapeHtml(descricao)}</p>` : ''}
             <textarea placeholder="Escreva sua resposta..." data-pergunta-id="${escapeHtml(String(qId))}" data-resposta-id="" data-dirty="false"></textarea>
             <div class="save-indicator" style="font-size:12px; margin-top:6px; display:none;">...</div>
         </div>
-    `;
+        `;
     }).join("");
 }
 
