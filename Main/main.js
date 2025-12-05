@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5250";
+const API_BASE = "https://as-api-eegt.onrender.com";
 const TOKEN = localStorage.getItem("token"); // ajuste se você usa outro local
 
 function mostrarPesquisa() {
