@@ -162,6 +162,10 @@ section {
     font-size: 20px;
 }
 
+#sobre-title {
+    color: var(--blue-2);
+}
+
 .muted {
     color: var(--muted);
     font-size: 14px;
