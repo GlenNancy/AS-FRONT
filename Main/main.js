@@ -222,7 +222,7 @@ carregarPesquisas();
 // botão de logout
 document.getElementById("btnLogout")?.addEventListener("click", () => {
     localStorage.removeItem("token");
-    window.location.href = "../Login_Register/login_register.html";
+    window.location.href = "Login_Register/login_register.html";
 });
 
 // bloqueio de acesso sem token

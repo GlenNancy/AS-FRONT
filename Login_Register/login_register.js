@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5250"; // ajuste se necessário
+const API_BASE = "https://as-api-eegt.onrender.com"; // ajuste se necessário
 
 // Helpers
 function qs(sel) { return document.querySelector(sel); }
@@ -64,7 +64,7 @@ formLogin.addEventListener('submit', async (e) => {
         }
 
         localStorage.setItem('token', token);
-        window.location.href = '../Main/main.html';
+        window.location.href = '../index.html';
 
     } catch (err) {
         console.error(err);
@@ -110,7 +110,7 @@ formRegister.addEventListener('submit', async (e) => {
         if (registerToken) {
             localStorage.setItem('token', registerToken);
             // redireciona direto para main
-            window.location.href = '../Main/main.html';
+            window.location.href = '../index.html';
             return;
         }
 
@@ -141,7 +141,7 @@ formRegister.addEventListener('submit', async (e) => {
 
         // sucesso: guarda token e redireciona
         localStorage.setItem('token', token);
-        window.location.href = '../Main/main.html';
+        window.location.href = '../index.html';
 
     } catch (err) {
         console.error(err);
@@ -159,6 +159,6 @@ formRegister.addEventListener('submit', async (e) => {
     const token = localStorage.getItem('token');
     if (token) {
         // já logado -> envia para main
-        window.location.href = '../Main/main.html';
+        window.location.href = '../index.html';
     }
 })();

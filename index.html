@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Protótipo AS — Página Longa</title>
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="Main/main.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Montserrat:wght@600;700&display=swap"
         rel="stylesheet">
@@ -14,7 +14,7 @@
             const token = localStorage.getItem('token');
             if (!token) {
                 // sem token → leva pro login/registro
-                window.location.href = '../Login_Register/login_register.html';
+                window.location.href = 'Login_Register/login_register.html';
             } else {
             }
         })();
@@ -28,10 +28,11 @@
         <header class="conteudo" role="banner" aria-label="Hero AS">
             <button id="btnLogout" class="logout-btn">Sair</button>
             <div class="conteudo-left">
-                <div class="gestao-performace as">AS – Gestão & Performance</div>
-                <h1>A AS nasce para desenvolver pessoas e formar pensadores críticos.</h1>
-                <p class="introducao">A inteligência artificial avança — nós desenvolvemos as habilidades humanas que
-                    continuam insubstituíveis: comunicação, gestão, inteligência emocional e performance.</p>
+                <div class="gestao-performace as">AS — Sistema, Gestão & Performance</div>
+                <h1>Nós estamos chegando para fazer história.</h1>
+                <p class="introducao">A Verdade é simples: a inteligência artificial já está dominando processos,
+                    decisões e rotinas inteiras. E enquanto isso, muita gente está perdendo senso crítico,
+                    deixando de se desenvolver e abrindo mão das competências que realmente importam.</p>
 
                 <div class="lista-corpo">
                     <button class="botao botao-primario" onclick="mostrarPesquisa()">
@@ -57,11 +58,11 @@
                 </div>
                 <div class="mini-card">
                     <h4>Tempo estimado</h4>
-                    <p>~ 7–12 minutos</p>
+                    <p>~ 3–6 minutos</p>
                 </div>
                 <div class="mini-card">
-                    <h4>Meta</h4>
-                    <p>Mapear dores e prioridades para novos cursos.</p>
+                    <h4>Objetivo</h4>
+                    <p>Avaliar o nível real de maturidade profissional do mercado e mostrar, de forma clara e direta, o que está travando o crescimento da maioria das pessoas.</p>
                 </div>
             </aside>
         </header>
@@ -130,19 +131,25 @@
                 </div>
             </div>
             <div style="text-align:right;">
-                <div class="muted">Siga-nos</div>
+                <div class="muted">Contatos</div>
                 <div style="margin-top:6px;"><span class="pill">
                     <a href="https://wa.me/551194337-0983
                     " target="_blank">
-                            Falar no WhatsApp
-                    </a></span> <span class="pill">Instagram</span>
+                            Anderson S — Founder & CEO
+                    </a></span>
+                </div>
+                <div style="margin-top:6px;"><span class="pill">
+                    <a href="https://wa.me/551898132-0533
+                    " target="_blank">
+                            Antônio S — Co-Founder & CTO
+                    </a></span>
                 </div>
             </div>
         </footer>
 
     </div>
 
-    <script src="main.js"></script>
+    <script src="Main/main.js"></script>
 </body>
 
 </html>
