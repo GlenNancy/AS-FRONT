@@ -297,6 +297,7 @@ async function gerarAcesso() {
 
 
 // hookup UI
+// hookup UI
 document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('btnGenerateAccess');
     const msg = document.getElementById('access-msg');
@@ -305,16 +306,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btn.addEventListener('click', async () => {
         msg.textContent = "";
-        btn.disabled = true;
         const oldText = btn.innerText;
+        btn.disabled = true;
         btn.innerText = "Gerando...";
+
+        let sucesso = false;
 
         try {
             const result = await gerarAcesso();
 
             if (result.ok) {
+                sucesso = true;
+
                 msg.textContent = result.body.mensagem || "Acesso gerado com sucesso. Veja abaixo.";
                 renderAccessResult(result.body);
+
+                // 🔒 depois de gerar o acesso uma vez, some com o botão
+                btn.remove(); // ou: btn.classList.add('hidden');
             } else {
                 let userMsg = "Erro ao gerar acesso.";
                 const body = result.body;
@@ -332,11 +340,15 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(err);
             msg.textContent = "Erro de rede ao tentar gerar o acesso.";
         } finally {
-            btn.disabled = false;
-            btn.innerText = oldText;
+            // só reabilita o botão se NÃO deu certo
+            if (!sucesso) {
+                btn.disabled = false;
+                btn.innerText = oldText;
+            }
         }
     });
 });
+
 
 
 function renderAccessResult(data) {
