@@ -355,7 +355,7 @@ function renderAccessResult(data) {
     const container = document.getElementById('access-result');
     if (!container) return;
 
-    const login = data && (data.login || data.email || data.userName || data.usuario || "");
+    const login = data && (data.login || data.userName || data.usuario || "");
     const senha = data && (data.senha || data.password || data.senhaAcesso || data.senhaGerada || data.tokenAcesso);
 
     container.innerHTML = `
@@ -384,3 +384,4 @@ function renderAccessResult(data) {
 
     container.classList.remove('hidden');
 }
+
