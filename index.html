@@ -43,7 +43,8 @@
                         onclick="document.getElementById('sobreAS').scrollIntoView({behavior:'smooth'})">O que é a
                         AS?</button>
                     <button class="botao botao-fantasma"
-                        onclick="document.getElementById('comoAsAtua').scrollIntoView({behavior:'smooth'})">Como a A.S atua hoje?</button>
+                        onclick="document.getElementById('comoAsAtua').scrollIntoView({behavior:'smooth'})">Como a A.S
+                        atua hoje?</button>
                     <button class="botao botao-fantasma"
                         onclick="document.getElementById('contato').scrollIntoView({behavior:'smooth'})">Contato</button>
                 </div>
@@ -65,7 +66,8 @@
                 </div>
                 <div class="mini-card">
                     <h4>Objetivo</h4>
-                    <p>Avaliar o nível real de maturidade profissional do mercado e mostrar, de forma clara e direta, o que está travando o crescimento da maioria das pessoas.</p>
+                    <p>Avaliar o nível real de maturidade profissional do mercado e mostrar, de forma clara e direta, o
+                        que está travando o crescimento da maioria das pessoas.</p>
                 </div>
             </aside>
         </header>
@@ -113,25 +115,29 @@
         <section id="comoAsAtua" class="card access-card" aria-labelledby="atua-title">
             <div role="region" aria-label="Como a AS atua hoje">
                 <h3 id="sobre-title">Como a A.S atua hoje</h3>
-        
+
                 <p class="muted">
-                    A crescente demanda por serviços, soluções e orientação estratégica deixou claro que era hora de consolidar tudo em uma única marca.
-                    Por isso, ainda este ano, nasceu a <strong>A.S</strong>, criada para iniciar um projeto sólido, escalável e totalmente focado no desenvolvimento real de pessoas e profissionais.
+                    A crescente demanda por serviços, soluções e orientação estratégica deixou claro que era hora de
+                    consolidar tudo em uma única marca.
+                    Por isso, ainda este ano, nasceu a <strong>A.S</strong>, criada para iniciar um projeto sólido,
+                    escalável e totalmente focado no desenvolvimento real de pessoas e profissionais.
                 </p>
-        
+
                 <p class="muted" style="margin-top:12px;">
                     Atualmente, a <strong>A.S já atua</strong> de forma ativa nas áreas de:
                 </p>
-        
+
                 <ul class="muted" style="margin-top:10px; padding-left:18px; line-height:1.6;">
                     <li><strong>Sistemas</strong> — desenvolvimento, automação e soluções tecnológicas;</li>
                     <li><strong>Gestão</strong> — estruturação de processos e melhorias na tomada de decisão;</li>
                     <li><strong>Performance</strong> — desenvolvimento de habilidades humanas e estratégicas;</li>
-                    <li><strong>Desenvolvimento profissional</strong> — formando pessoas mais críticas, preparadas e eficientes.</li>
+                    <li><strong>Desenvolvimento profissional</strong> — formando pessoas mais críticas, preparadas e
+                        eficientes.</li>
                 </ul>
-        
+
                 <p class="muted" style="margin-top:14px;">
-                    E este é apenas o começo, estamos construindo algo que vai transformar carreiras, negócios e a forma como as pessoas evoluem diante da inteligência artificial.
+                    E este é apenas o começo, estamos construindo algo que vai transformar carreiras, negócios e a forma
+                    como as pessoas evoluem diante da inteligência artificial.
                 </p>
             </div>
         </section>
@@ -140,35 +146,24 @@
         <!-- PESQUISA 1 (DETAILED) -->
         <section id="pesquisas"></section>
 
-         <!-- Formulário: Gerar Acesso e Mostrar na Tela -->
+        <!-- GERAR ACESSO (SEM E-MAIL) -->
         <div class="card access-card" id="accessCard">
             <h4>Seu acesso exclusivo</h4>
             <p class="muted">
-                Digite seu e-mail e clique em <strong>Gerar acesso</strong>. Vamos criar um login e uma senha únicos
-                e mostrar tudo aqui na tela para você salvar.
+                Clique em <strong>Gerar acesso</strong>. Vamos criar um login e uma senha únicos
+                e exibir tudo aqui na tela para você salvar.
             </p>
 
-            <div class="access-layout">
-                <!-- Lado esquerdo: input + botão -->
-                <div class="access-input-side">
-                    <label for="access-email" class="access-label">
-                        E-mail que você usa no dia a dia
-                    </label>
-                    <input id="access-email" type="email" placeholder="seu@email.com" />
+            <button id="btnGenerateAccess" class="btn-primary">
+                Gerar acesso
+            </button>
 
-                    <button id="btnGenerateAccess" class="btn-primary">
-                        Gerar acesso
-                    </button>
+            <div id="access-msg" class="muted" style="margin-top:10px; min-height:18px"></div>
 
-                    <div id="access-msg" class="muted" style="margin-top:10px; min-height:18px"></div>
-                </div>
-
-                <!-- Lado direito: resultado do acesso -->
-                <div id="access-result" class="access-result hidden">
-                    <!-- Conteúdo preenchido via JavaScript -->
-                </div>
-            </div>
+            <!-- Resultado do acesso (preenchido via JS) -->
+            <div id="access-result" class="access-result hidden"></div>
         </div>
+
 
 
         <!-- FINAL / FOOTER -->
@@ -181,16 +176,16 @@
             <div style="text-align:right;">
                 <div class="muted">Contatos</div>
                 <div style="margin-top:6px;"><span class="pill">
-                    <a href="https://wa.me/5511943370983
+                        <a href="https://wa.me/5511943370983
                     " target="_blank">
                             Anderson S — Founder & CEO
-                    </a></span>
+                        </a></span>
                 </div>
                 <div style="margin-top:6px;"><span class="pill">
-                    <a href="https://wa.me/5518981320533
+                        <a href="https://wa.me/5518981320533
                     " target="_blank">
                             Antônio S — Co-Founder & CTO
-                    </a></span>
+                        </a></span>
                 </div>
             </div>
         </footer>

@@ -246,7 +246,7 @@ function getToken() {
     return localStorage.getItem('token') || null;
 }
 
-// tenta extrair userId do JWT (se o token for JWT)
+// pega o userId do JWT
 function getUserIdFromToken() {
     const token = getToken();
     if (!token) return null;
@@ -254,27 +254,97 @@ function getUserIdFromToken() {
         const parts = token.split('.');
         if (parts.length < 2) return null;
         const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
-        // possíveis chaves: nameid, sub, http://schemas.xml.../nameidentifier
-        return payload.nameid || payload.sub || payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || null;
+        return payload.nameid
+            || payload.sub
+            || payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
+            || null;
     } catch (e) {
         console.warn("Não foi possível decodificar token:", e);
         return null;
     }
 }
 
-function renderAccessResult(data, emailFallback) {
+async function gerarAcesso() {
+    const token = getToken();
+    const userId = getUserIdFromToken();
+
+    if (!userId) {
+        return {
+            ok: false,
+            status: 400,
+            body: { mensagem: "Não foi possível identificar o usuário logado." }
+        };
+    }
+
+    const body = { userId: parseInt(userId, 10) };
+
+    const res = await fetch(`${API_BASE}/api/UserAcessos/gerar`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+        },
+        body: JSON.stringify(body)
+    });
+
+    const text = await res.text();
+    let parsed;
+    try { parsed = JSON.parse(text); } catch { parsed = text; }
+
+    return { ok: res.ok, status: res.status, body: parsed };
+}
+
+
+
+// hookup UI
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('btnGenerateAccess');
+    const msg = document.getElementById('access-msg');
+
+    if (!btn) return;
+
+    btn.addEventListener('click', async () => {
+        msg.textContent = "";
+        btn.disabled = true;
+        const oldText = btn.innerText;
+        btn.innerText = "Gerando...";
+
+        try {
+            const result = await gerarAcesso();
+
+            if (result.ok) {
+                msg.textContent = result.body.mensagem || "Acesso gerado com sucesso. Veja abaixo.";
+                renderAccessResult(result.body);
+            } else {
+                let userMsg = "Erro ao gerar acesso.";
+                const body = result.body;
+                if (body) {
+                    if (typeof body === 'object') {
+                        userMsg = body.mensagem || body.message || JSON.stringify(body);
+                    } else {
+                        userMsg = String(body);
+                    }
+                }
+                msg.textContent = userMsg;
+                console.warn("Resposta da API:", result);
+            }
+        } catch (err) {
+            console.error(err);
+            msg.textContent = "Erro de rede ao tentar gerar o acesso.";
+        } finally {
+            btn.disabled = false;
+            btn.innerText = oldText;
+        }
+    });
+});
+
+
+function renderAccessResult(data) {
     const container = document.getElementById('access-result');
     if (!container) return;
 
-    // tenta descobrir o login/e-mail retornado pela API
-    const login =
-        (data && (data.email || data.login || data.userName || data.usuario)) ||
-        emailFallback ||
-        "";
-
-    // tenta descobrir a senha retornada pela API
-    const senha =
-        data && (data.senha || data.password || data.senhaAcesso || data.senhaGerada || data.tokenAcesso);
+    const login = data && (data.login || data.email || data.userName || data.usuario || "");
+    const senha = data && (data.senha || data.password || data.senhaAcesso || data.senhaGerada || data.tokenAcesso);
 
     container.innerHTML = `
         <h5 class="access-result-title">Guarde bem esse acesso</h5>
@@ -284,7 +354,7 @@ function renderAccessResult(data, emailFallback) {
 
         <div class="access-cred-box">
             <div class="access-field">
-                <span class="access-field-label">Login (e-mail)</span>
+                <span class="access-field-label">Login</span>
                 <div class="access-field-value">${escapeHtml(login)}</div>
             </div>
             <div class="access-field">
@@ -302,50 +372,3 @@ function renderAccessResult(data, emailFallback) {
 
     container.classList.remove('hidden');
 }
-
-
-// hookup UI
-document.addEventListener('DOMContentLoaded', () => {
-    const input = document.getElementById('access-email');
-    const btn = document.getElementById('btnGenerateAccess');
-    const msg = document.getElementById('access-msg');
-
-    btn.addEventListener('click', async () => {
-        const email = (input.value || "").trim();
-        if (!email) {
-            msg.textContent = "Por favor, informe um e-mail válido.";
-            return;
-        }
-
-        btn.disabled = true;
-        const oldText = btn.innerText;
-        btn.innerText = "Enviando...";
-        msg.textContent = "";
-
-        try {
-            const result = await gerarAcessoPorEmail(email);
-            if (result.ok) {
-                msg.textContent = "Acesso gerado abaixo. Salve essas informações.";
-                renderAccessResult(result.body, email);
-            } else {
-                let userMsg = "Erro ao gerar acesso.";
-                if (result.body) {
-                    if (typeof result.body === 'object') {
-                        userMsg = result.body.mensagem || result.body.message || JSON.stringify(result.body);
-                    } else {
-                        userMsg = String(result.body);
-                    }
-                }
-                msg.textContent = userMsg;
-                console.warn("Resposta:", result);
-            }
-        } catch (err) {
-            console.error(err);
-            msg.textContent = "Erro de rede ao tentar gerar o acesso.";
-        } finally {
-            btn.disabled = false;
-            btn.innerText = oldText;
-        }
-    });
-});
-

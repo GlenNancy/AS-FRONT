@@ -353,27 +353,22 @@ footer {
     padding: 16px;
     border: 1px solid rgba(77, 168, 255, 0.25);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    margin-top: 18px;
 }
 
 .access-result-title {
     margin: 0 0 6px 0;
     font-size: 15px;
     font-family: Montserrat;
-    color: var(--white);
 }
 
 .access-result-sub {
     margin: 0 0 14px 0;
     font-size: 12px;
-    line-height: 1.4;
 }
 
 .access-cred-box {
     display: grid;
-    grid-template-columns: 1fr;
     gap: 10px;
     margin-bottom: 10px;
 }
@@ -395,9 +390,8 @@ footer {
 }
 
 .access-field-value {
-    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     font-size: 13px;
-    color: var(--white);
     word-break: break-all;
 }
 
@@ -409,6 +403,7 @@ footer {
 .hidden {
     display: none !important;
 }
+
 
 
 .access-card {
