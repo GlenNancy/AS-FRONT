@@ -69,43 +69,29 @@ function renderizarPerguntas(perguntas) {
 
     return perguntas.map((p, i) => {
         const q = normalizePerguntaObject(p);
-
         const qId = q.id ?? q.Id ?? q.perguntaId ?? q.PerguntaId ?? `idx_${i}`;
 
-        const titulo =
-            getField(q, ['titulo', 'Titulo', 'Texto', 'texto']) ||
-            `Pergunta ${i + 1}`;
+        // Texto principal da pergunta (vem de Texto/Text)
+        const titulo = getField(q, ['titulo', 'Titulo', 'Texto', 'texto']) || `Pergunta ${i + 1}`;
 
-        const provocativo =
-            getField(q, ['textoProvocativo', 'TextoProvocativo']) || "";
-
-        const descricao =
-            getField(q, ['descricao', 'Descricao']) || "";
+        // Aqui pegamos o TextoProvocativo ou Descricao, se existir
+        const descricao = getField(q, [
+            'descricao',
+            'Descricao',
+            'textoProvocativo',
+            'TextoProvocativo'
+        ]) || "";
 
         return `
         <div class="q-card" style="margin-bottom:12px;">
             <h4>${i + 1}. ${escapeHtml(titulo)}</h4>
-
-            ${provocativo
-                ? `<p class="muted subtitulo-provocativo">${escapeHtml(provocativo)}</p>`
-                : ''}
-
-            ${descricao
-                ? `<p>${escapeHtml(descricao)}</p>`
-                : ''}
-
-            <textarea
-                placeholder="Escreva sua resposta..."
-                data-pergunta-id="${escapeHtml(String(qId))}"
-                data-resposta-id=""
-                data-dirty="false"></textarea>
-
+            ${descricao ? `<p class="muted" style="margin:4px 0 10px 0;">${escapeHtml(descricao)}</p>` : ''}
+            <textarea placeholder="Escreva sua resposta..." data-pergunta-id="${escapeHtml(String(qId))}" data-resposta-id="" data-dirty="false"></textarea>
             <div class="save-indicator" style="font-size:12px; margin-top:6px; display:none;">...</div>
         </div>
         `;
     }).join("");
 }
-
 
 /* Inicializa handlers (autosave opcional e marca dirty) */
 function initHandlersParaSecao(secElement) {
@@ -276,27 +262,47 @@ function getUserIdFromToken() {
     }
 }
 
-async function gerarAcessoPorEmail(email) {
-    const token = getToken();
-    const userId = getUserIdFromToken(); // pode ser null se não for JWT ou não possuir claims
-    const body = { userId: userId, email: email }; // backend espera { userId, email }
+function renderAccessResult(data, emailFallback) {
+    const container = document.getElementById('access-result');
+    if (!container) return;
 
-    const res = await fetch(`${API_BASE}/api/UserAcessos/gerar`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { 'Authorization': 'Bearer ' + token } : {})
-        },
-        body: JSON.stringify(body)
-    });
+    // tenta descobrir o login/e-mail retornado pela API
+    const login =
+        (data && (data.email || data.login || data.userName || data.usuario)) ||
+        emailFallback ||
+        "";
 
-    const text = await res.text();
-    // tentar parsear JSON se for JSON
-    let parsed = null;
-    try { parsed = JSON.parse(text); } catch { parsed = text; }
+    // tenta descobrir a senha retornada pela API
+    const senha =
+        data && (data.senha || data.password || data.senhaAcesso || data.senhaGerada || data.tokenAcesso);
 
-    return { ok: res.ok, status: res.status, body: parsed };
+    container.innerHTML = `
+        <h5 class="access-result-title">Guarde bem esse acesso</h5>
+        <p class="muted access-result-sub">
+            Ele é exclusivo e pode não ser exibido novamente da mesma forma. Tire um print ou copie para um lugar seguro.
+        </p>
+
+        <div class="access-cred-box">
+            <div class="access-field">
+                <span class="access-field-label">Login (e-mail)</span>
+                <div class="access-field-value">${escapeHtml(login)}</div>
+            </div>
+            <div class="access-field">
+                <span class="access-field-label">Senha</span>
+                <div class="access-field-value">
+                    ${senha ? escapeHtml(String(senha)) : "<em>Senha não retornada pela API</em>"}
+                </div>
+            </div>
+        </div>
+
+        <p class="muted access-tip">
+            ➜ Recomendamos salvar esse acesso em um gerenciador de senhas ou bloco de notas seguro.
+        </p>
+    `;
+
+    container.classList.remove('hidden');
 }
+
 
 // hookup UI
 document.addEventListener('DOMContentLoaded', () => {
@@ -319,9 +325,9 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const result = await gerarAcessoPorEmail(email);
             if (result.ok) {
-                msg.textContent = "Acesso gerado — verifique seu e-mail.";
+                msg.textContent = "Acesso gerado abaixo. Salve essas informações.";
+                renderAccessResult(result.body, email);
             } else {
-                // tenta extrair mensagem amigável
                 let userMsg = "Erro ao gerar acesso.";
                 if (result.body) {
                     if (typeof result.body === 'object') {
@@ -342,3 +348,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+

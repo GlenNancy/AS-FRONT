@@ -140,17 +140,34 @@
         <!-- PESQUISA 1 (DETAILED) -->
         <section id="pesquisas"></section>
 
-        <!-- Formulário: Receber Acesso por E-mail -->
+         <!-- Formulário: Gerar Acesso e Mostrar na Tela -->
         <div class="card access-card" id="accessCard">
-            <h4>Receba o acesso</h4>
-            <p class="muted">Digite seu e-mail e clique em gerar acesso. Você receberá login e senha por e-mail.</p>
+            <h4>Seu acesso exclusivo</h4>
+            <p class="muted">
+                Digite seu e-mail e clique em <strong>Gerar acesso</strong>. Vamos criar um login e uma senha únicos
+                e mostrar tudo aqui na tela para você salvar.
+            </p>
 
-            <input id="access-email" type="email" placeholder="seu@email.com" />
+            <div class="access-layout">
+                <!-- Lado esquerdo: input + botão -->
+                <div class="access-input-side">
+                    <label for="access-email" class="access-label">
+                        E-mail que você usa no dia a dia
+                    </label>
+                    <input id="access-email" type="email" placeholder="seu@email.com" />
 
-            <button id="btnGenerateAccess" class="btn-primary">Enviar acesso por e-mail</button>
+                    <button id="btnGenerateAccess" class="btn-primary">
+                        Gerar acesso
+                    </button>
 
+                    <div id="access-msg" class="muted" style="margin-top:10px; min-height:18px"></div>
+                </div>
 
-            <div id="access-msg" class="muted" style="margin-top:10px; min-height:18px"></div>
+                <!-- Lado direito: resultado do acesso -->
+                <div id="access-result" class="access-result hidden">
+                    <!-- Conteúdo preenchido via JavaScript -->
+                </div>
+            </div>
         </div>
 
 
