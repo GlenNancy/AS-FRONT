@@ -34,7 +34,62 @@ async function safeJson(res) {
     try { return await res.json(); } catch { return null; }
 }
 
-// LOGIN handler (mantive seu fluxo original, com pequenas melhorias)
+/* ========== ROLE / REDIRECT HELPERS ========== */
+
+// decodifica o payload do JWT (sem verificar assinatura) e tenta retornar o claim de role
+function getRoleFromToken(token) {
+    if (!token) return null;
+    try {
+        // se for token literal 'Admin' / 'admin' tratamos fora
+        const parts = token.split('.');
+        if (parts.length < 2) return null;
+        const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+        const possible = [
+            'role', 'roles', 'Role', 'Roles',
+            'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
+            'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role'
+        ];
+        for (const k of possible) {
+            if (payload[k] !== undefined && payload[k] !== null) return payload[k];
+        }
+        if (payload.claims && typeof payload.claims === 'object') {
+            for (const k of possible) if (payload.claims[k]) return payload.claims[k];
+        }
+        return null;
+    } catch (e) {
+        // token pode não ser JWT — ignora
+        return null;
+    }
+}
+
+// decide para onde ir depois do login baseado na role
+function redirectAfterLogin(token) {
+    const adminPath = '../Admin/admin.html'; // ajuste se quiser '/Admin/admin.html'
+    const mainPath = '../index.html';
+
+    if (!token) { window.location.href = mainPath; return; }
+
+    // token literal 'Admin' ou 'admin' => admin
+    if (token === 'Admin' || token === 'admin') {
+        window.location.href = adminPath;
+        return;
+    }
+
+    const role = getRoleFromToken(token);
+    if (!role) {
+        // sem role detectada — vai pra main
+        window.location.href = mainPath;
+        return;
+    }
+    const roleLower = Array.isArray(role) ? String(role[0]).toLowerCase() : String(role).toLowerCase();
+    if (roleLower === 'admin' || roleLower === 'administrator' || roleLower === 'adm') {
+        window.location.href = adminPath;
+    } else {
+        window.location.href = mainPath;
+    }
+}
+
+/* ========== LOGIN ========== */
 formLogin.addEventListener('submit', async (e) => {
     e.preventDefault();
     loginMsg.textContent = '';
@@ -43,7 +98,7 @@ formLogin.addEventListener('submit', async (e) => {
     if (!nome || !senha) { loginMsg.textContent = 'Preencha nome e senha.'; return; }
 
     try {
-        const password = senha; // enviar senha em texto (backend fará hash se for o caso)
+        const password = senha;
 
         const res = await fetch(`${API_BASE}/api/auth/login`, {
             method: 'POST',
@@ -64,7 +119,8 @@ formLogin.addEventListener('submit', async (e) => {
         }
 
         localStorage.setItem('token', token);
-        window.location.href = '../index.html';
+        // novo: redireciona com base na role
+        redirectAfterLogin(token);
 
     } catch (err) {
         console.error(err);
@@ -72,7 +128,7 @@ formLogin.addEventListener('submit', async (e) => {
     }
 });
 
-// REGISTER handler — agora faz login automático após registrar
+/* ========== REGISTER ========== */
 formRegister.addEventListener('submit', async (e) => {
     e.preventDefault();
     regMsg.textContent = '';
@@ -81,7 +137,6 @@ formRegister.addEventListener('submit', async (e) => {
     const senha = qs('#reg-senha').value;
     if (!nome || !email || !senha) { regMsg.textContent = 'Preencha todos os campos.'; return; }
 
-    // UI lock
     const submitBtn = formRegister.querySelector('button[type="submit"]');
     const originalText = submitBtn ? submitBtn.innerText : null;
     if (submitBtn) {
@@ -102,6 +157,7 @@ formRegister.addEventListener('submit', async (e) => {
         const body = await safeJson(res);
         if (!res.ok) {
             regMsg.textContent = body && body.Mensagem ? body.Mensagem : (body && body.message) || 'Falha ao registrar';
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = originalText; }
             return;
         }
 
@@ -109,8 +165,7 @@ formRegister.addEventListener('submit', async (e) => {
         const registerToken = body && (body.token || body.Token || body.accessToken);
         if (registerToken) {
             localStorage.setItem('token', registerToken);
-            // redireciona direto para main
-            window.location.href = '../index.html';
+            redirectAfterLogin(registerToken);
             return;
         }
 
@@ -125,10 +180,9 @@ formRegister.addEventListener('submit', async (e) => {
 
         const loginBody = await safeJson(loginRes);
         if (!loginRes.ok) {
-            // falha ao logar automaticamente: mostrar mensagem e direcionar para tela de login
             regMsg.textContent = loginBody && loginBody.Mensagem ? loginBody.Mensagem : (loginBody && loginBody.message) || 'Conta criada, mas falha ao efetuar login automático. Faça login manualmente.';
-            // abrir aba de login para que usuário possa entrar manualmente
             setTimeout(() => showTab('login'), 1400);
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = originalText; }
             return;
         }
 
@@ -136,12 +190,12 @@ formRegister.addEventListener('submit', async (e) => {
         if (!token) {
             regMsg.textContent = 'Conta criada, porém token não retornado no login automático.';
             setTimeout(() => showTab('login'), 1400);
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = originalText; }
             return;
         }
 
-        // sucesso: guarda token e redireciona
         localStorage.setItem('token', token);
-        window.location.href = '../index.html';
+        redirectAfterLogin(token);
 
     } catch (err) {
         console.error(err);
@@ -154,11 +208,8 @@ formRegister.addEventListener('submit', async (e) => {
     }
 });
 
-// se já tiver token redireciona direto
+/* inicialização: se já tiver token, redireciona conforme role */
 (function init() {
-    const token = localStorage.getItem('token');
-    if (token) {
-        // já logado -> envia para main
-        window.location.href = '../index.html';
-    }
+    const t = localStorage.getItem('token');
+    if (t) redirectAfterLogin(t);
 })();

@@ -1,0 +1,146 @@
+:root {
+    --bg: #0B0B0D;
+    --panel: #0F1114;
+    --muted: #C9C9C9;
+    --accent: #4DA8FF
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0;
+    font-family: Inter, system-ui, Arial, sans-serif;
+    background: linear-gradient(180deg, #071017, #0b0b0d);
+    color: var(--muted);
+    padding: 20px
+}
+
+.wrap {
+    max-width: 1100px;
+    margin: 0 auto
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px
+}
+
+.top h1 {
+    color: #fff;
+    margin: 0;
+    font-size: 20px
+}
+
+.actions button {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 8px 10px;
+    border-radius: 6px;
+    color: var(--muted);
+    cursor: pointer
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 16px
+}
+
+.panel {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 14px;
+    border-radius: 10px
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 16px;
+    border-radius: 10px
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px
+}
+
+.label {
+    font-size: 13px;
+    color: var(--muted)
+}
+
+.big {
+    font-size: 20px;
+    color: #fff;
+    font-weight: 700
+}
+
+.list {
+    max-height: 420px;
+    overflow: auto;
+    margin-top: 8px
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.01);
+    cursor: pointer
+}
+
+.item:hover {
+    background: rgba(255, 255, 255, 0.02)
+}
+
+.small {
+    font-size: 12px;
+    color: #9aa
+}
+
+.detail .answers {
+    margin-top: 10px;
+    white-space: pre-wrap
+}
+
+.foot {
+    margin-top: 18px;
+    color: #6f757a;
+    font-size: 13px
+}
+
+@media(max-width:840px) {
+    .grid {
+        grid-template-columns: 1fr
+    }
+
+    .panel {
+        order: 2
+    }
+}
+
+.refresh-btn {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 8px 0;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 14px;
+    transition: .2s;
+}
+
+.refresh-btn:hover {
+    background: rgba(255, 255, 255, 0.10);
+    color: #fff;
+}

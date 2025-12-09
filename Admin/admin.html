@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Admin • AS - Painel de Respostas</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+    <div class="wrap">
+        <header class="top">
+            <h1>Admin - Painel de Respostas</h1>
+            <div class="actions">
+                <button id="btnLogout">Sair</button>
+            </div>
+        </header>
+
+        <main class="grid">
+            <aside class="panel">
+                <div class="stats">
+                    <div>
+                        <div class="label">Usuários que responderam todas as perguntas</div>
+                        <div id="completedCount" class="big">—</div>
+                    </div>
+                    <div>
+                        <div class="label">Total de respostas</div>
+                        <div id="totalAnswers" class="big">—</div>
+                    </div>
+                </div>
+
+                <button id="btnRefresh" class="refresh-btn">Atualizar dados</button>
+
+                <canvas id="chart" height="160"></canvas>
+
+                <div class="label small" style="margin-top:12px">Respondentes (clique no número para ver respostas)
+                </div>
+                <div id="respondents" class="list"></div>
+            </aside>
+
+            <section class="detail card">
+                <div class="label small">Detalhes do respondente</div>
+                <h2 id="respondentName">Selecione um item à esquerda</h2>
+                <div id="answersList" class="answers"></div>
+            </section>
+        </main>
+
+        <footer class="foot">Painel admin • AS — Gestão &amp; Performance</footer>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>
