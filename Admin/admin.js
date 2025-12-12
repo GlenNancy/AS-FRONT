@@ -126,56 +126,90 @@
         sorted.forEach(u => {
             const div = document.createElement('div');
             div.className = 'item';
-            const displayName = u.nome || u.name || u.email || u.id || u.userId;
-            div.innerHTML = `<div><strong>${u.count}</strong> respostas</div><div class="small">${escapeHtml(displayName)}</div>`;
-            div.addEventListener('click', () => showDetails(u, questionMap));
+            // mostra nome + contagem (e email pequeno)
+            const displayName = u.nome || u.name || u.email || u.id;
+            const small = u.email ? `${escapeHtml(u.email)}` : '';
+            div.innerHTML = `<div><strong>${u.count}</strong> respostas</div><div class="small">${escapeHtml(displayName)} ${small ? '· ' + small : ''}</div>`;
+            div.addEventListener('click', () => showDetails(u, questionMap)); // passa o objeto normalizado
             container.appendChild(div);
         });
         return sorted;
     }
 
-    function showDetails(user, qmap) {
-            // nome principal do cabeçalho
-            const displayName = user.nome || user.name || user.email || `id: ${user.id || user.userId}`;
-            $('respondentName').textContent = displayName;
-        
-            // populando bloco userInfo
-            const userInfoEl = $('userInfo');
-            const userNameEl = $('userName');
-            const userEmailEl = $('userEmail');
-        
-            const emailVal = user.email || user.Email || user.mail || null;
-        
-            userNameEl.textContent = user.nome || user.name || '—';
-            if (emailVal) {
-                userEmailEl.textContent = emailVal;
-                userEmailEl.href = `mailto:${emailVal}`;
-            } else {
-                userEmailEl.textContent = '—';
-                userEmailEl.removeAttribute('href');
-            }
-        
-            // mostra o bloco userInfo
-            userInfoEl.style.display = 'block';
-        
-            // respostas
-            const answersNode = $('answersList');
-            answersNode.innerHTML = '';
-            const respostas = user.respostas || user.Respostas || [];
-            if (!respostas.length) {
-                answersNode.textContent = 'Nenhuma resposta encontrada para este usuário.';
-                return;
-            }
-            respostas.forEach((r, i) => {
-                const pid = r.perguntaId ?? r.PerguntaId ?? r.pergunta?.id ?? r.pergunta?.PerguntaId;
-                const qText = (pid !== undefined && qmap && qmap[String(pid)]) ? qmap[String(pid)] : (r.pergunta?.texto || r.pergunta?.Texto || `Pergunta ${pid ?? (i + 1)}`);
-                const ans = r.texto || r.Texto || r.answer || r.resposta || '-';
-                const el = document.createElement('div');
-                el.style.padding = '8px 0';
-                el.innerHTML = `<div style="font-weight:600;color:white">${escapeHtml(String(qText))}</div><div class="small">${escapeHtml(String(ans))}</div><hr style="border:none;border-top:1px solid rgba(255,255,255,0.02);margin:8px 0">`;
-                answersNode.appendChild(el);
-            });
+
+    async function showDetails(userNormalized, qmap) {
+        // userNormalized é o objeto que criamos em normalized (tem .raw, .respostasCount, .respostas)
+        const raw = userNormalized.raw || userNormalized;
+    
+        // nome principal do cabeçalho (prioriza campos reais)
+        const displayName = raw.nome || raw.name || raw.email || `id: ${userNormalized.id || raw.id || ''}`;
+        $('respondentName').textContent = displayName;
+    
+        // populando bloco userInfo
+        const userInfoEl = $('userInfo');
+        const userNameEl = $('userName');
+        const userEmailEl = $('userEmail');
+    
+        const emailVal = raw.email || raw.Email || raw.emailAddress || raw.mail || userNormalized.email || null;
+    
+        userNameEl.textContent = raw.nome || raw.name || '—';
+        if (emailVal) {
+            userEmailEl.textContent = emailVal;
+            userEmailEl.href = `mailto:${emailVal}`;
+        } else {
+            userEmailEl.textContent = '—';
+            userEmailEl.removeAttribute('href');
         }
+    
+        // mostra o bloco userInfo
+        if (userInfoEl) userInfoEl.style.display = 'block';
+    
+        const answersNode = $('answersList');
+        answersNode.innerHTML = '';
+    
+        // Se já temos um array de respostas, usa; senão tenta buscar detalhes do usuário no backend
+        let respostasArr = userNormalized.respostas ?? [];
+        if ((!Array.isArray(respostasArr) || respostasArr.length === 0) && (typeof userNormalized.respostasCount === 'number')) {
+            // API só retornou contagem — tentar obter respostas reais via endpoint /api/Users/{id}
+            try {
+                const id = userNormalized.id || raw.id || raw.userId;
+                if (id) {
+                    const detalhe = await fetchJson(`${API_BASE}/api/Users/${id}`);
+                    if (detalhe) {
+                        // várias APIs retornam as respostas sob 'respostas' ou 'Respostas'
+                        respostasArr = detalhe.respostas ?? detalhe.Respostas ?? respostasArr;
+                        // atualiza também user info (caso tenha dados mais completos)
+                        if (detalhe.nome) userNameEl.textContent = detalhe.nome;
+                        if (detalhe.email) {
+                            userEmailEl.textContent = detalhe.email;
+                            userEmailEl.href = `mailto:${detalhe.email}`;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('Não foi possível buscar detalhes do usuário:', e);
+            }
+        }
+    
+        // Se ainda não temos respostas, informar contando quantas foram (se tivermos contagem)
+        if (!Array.isArray(respostasArr) || respostasArr.length === 0) {
+            const count = userNormalized.respostasCount ?? userNormalized.count ?? 0;
+            answersNode.textContent = count > 0 ? `Este usuário tem ${count} respostas (detalhes não disponíveis via API).` : 'Nenhuma resposta encontrada para este usuário.';
+            return;
+        }
+    
+        // Renderiza as respostas (array)
+        respostasArr.forEach((r, i) => {
+            const pid = r.perguntaId ?? r.PerguntaId ?? r.pergunta?.id ?? r.pergunta?.PerguntaId;
+            const qText = (pid !== undefined && qmap && qmap[String(pid)]) ? qmap[String(pid)] : (r.pergunta?.texto || r.pergunta?.Texto || `Pergunta ${pid ?? (i + 1)}`);
+            const ans = r.texto || r.Texto || r.answer || r.resposta || '-';
+            const el = document.createElement('div');
+            el.style.padding = '8px 0';
+            el.innerHTML = `<div style="font-weight:600;color:white">${escapeHtml(String(qText))}</div><div class="small">${escapeHtml(String(ans))}</div><hr style="border:none;border-top:1px solid rgba(255,255,255,0.02);margin:8px 0">`;
+            answersNode.appendChild(el);
+        });
+    }
+
 
 
     async function loadData() {
@@ -193,16 +227,24 @@
         const questionMap = await loadPerguntasMap();
 
         // 3) normaliza users (cada user tem .respostas array conforme exemplo)
+        // 3) normaliza users (cada user pode ter .respostas como número ou array)
         const normalized = users.map(u => {
-            const respostas = u.respostas || u.Respostas || [];
-            const count = Array.isArray(respostas) ? respostas.length : 0;
+            const raw = u; // guarda objeto original
+            const respostasRaw = u.respostas ?? u.Respostas ?? [];
+            const respostasArray = Array.isArray(respostasRaw) ? respostasRaw : []; // se for array, mantemos
+            const count = Array.isArray(respostasRaw) ? respostasRaw.length : (typeof respostasRaw === 'number' ? respostasRaw : 0);
+        
             return {
                 id: u.id || u.userId || u._id || Math.random().toString(36).slice(2, 8),
                 nome: u.nome || u.name || u.email || `User ${u.id || ''}`,
-                respostas,
+                email: u.email || u.Email || null,
+                respostas: respostasArray,     // array real (pode estar vazio)
+                respostasCount: count,         // contagem (se API fornecer número)
+                raw,                           // objeto original
                 count
             };
         });
+
 
         // calcula totais e quem completou (responderam todas as perguntas)
         const totalAnswers = normalized.reduce((s, u) => s + u.count, 0);
