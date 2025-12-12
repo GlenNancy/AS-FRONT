@@ -140,6 +140,16 @@ body {
     transition: .2s;
 }
 
+.user-info {
+    background: rgba(255,255,255,0.03);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.03);
+}
+.user-info a { color: #9fbfe8; text-decoration: none; }
+.user-info a:hover { text-decoration: underline; }
+
+
 .refresh-btn:hover {
     background: rgba(255, 255, 255, 0.10);
     color: #fff;
