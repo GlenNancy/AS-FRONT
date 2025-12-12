@@ -135,24 +135,48 @@
     }
 
     function showDetails(user, qmap) {
-        $('respondentName').textContent = user.nome || user.name || user.email || `id: ${user.id || user.userId}`;
-        const answersNode = $('answersList');
-        answersNode.innerHTML = '';
-        const respostas = user.respostas || user.Respostas || [];
-        if (!respostas.length) {
-            answersNode.textContent = 'Nenhuma resposta encontrada para este usuário.';
-            return;
+            // nome principal do cabeçalho
+            const displayName = user.nome || user.name || user.email || `id: ${user.id || user.userId}`;
+            $('respondentName').textContent = displayName;
+        
+            // populando bloco userInfo
+            const userInfoEl = $('userInfo');
+            const userNameEl = $('userName');
+            const userEmailEl = $('userEmail');
+        
+            const emailVal = user.email || user.Email || user.mail || null;
+        
+            userNameEl.textContent = user.nome || user.name || '—';
+            if (emailVal) {
+                userEmailEl.textContent = emailVal;
+                userEmailEl.href = `mailto:${emailVal}`;
+            } else {
+                userEmailEl.textContent = '—';
+                userEmailEl.removeAttribute('href');
+            }
+        
+            // mostra o bloco userInfo
+            userInfoEl.style.display = 'block';
+        
+            // respostas
+            const answersNode = $('answersList');
+            answersNode.innerHTML = '';
+            const respostas = user.respostas || user.Respostas || [];
+            if (!respostas.length) {
+                answersNode.textContent = 'Nenhuma resposta encontrada para este usuário.';
+                return;
+            }
+            respostas.forEach((r, i) => {
+                const pid = r.perguntaId ?? r.PerguntaId ?? r.pergunta?.id ?? r.pergunta?.PerguntaId;
+                const qText = (pid !== undefined && qmap && qmap[String(pid)]) ? qmap[String(pid)] : (r.pergunta?.texto || r.pergunta?.Texto || `Pergunta ${pid ?? (i + 1)}`);
+                const ans = r.texto || r.Texto || r.answer || r.resposta || '-';
+                const el = document.createElement('div');
+                el.style.padding = '8px 0';
+                el.innerHTML = `<div style="font-weight:600;color:white">${escapeHtml(String(qText))}</div><div class="small">${escapeHtml(String(ans))}</div><hr style="border:none;border-top:1px solid rgba(255,255,255,0.02);margin:8px 0">`;
+                answersNode.appendChild(el);
+            });
         }
-        respostas.forEach((r, i) => {
-            const pid = r.perguntaId ?? r.PerguntaId ?? r.pergunta?.id ?? r.pergunta?.PerguntaId;
-            const qText = (pid !== undefined && qmap && qmap[String(pid)]) ? qmap[String(pid)] : (r.pergunta?.texto || `Pergunta ${pid ?? (i + 1)}`);
-            const ans = r.texto || r.Texto || r.answer || r.resposta || '-';
-            const el = document.createElement('div');
-            el.style.padding = '8px 0';
-            el.innerHTML = `<div style="font-weight:600;color:white">${escapeHtml(String(qText))}</div><div class="small">${escapeHtml(String(ans))}</div><hr style="border:none;border-top:1px solid rgba(255,255,255,0.02);margin:8px 0">`;
-            answersNode.appendChild(el);
-        });
-    }
+
 
     async function loadData() {
         // 1) get all users
