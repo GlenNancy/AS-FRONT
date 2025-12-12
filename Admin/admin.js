@@ -98,7 +98,7 @@
         ctx.fillText(`${completed} / ${total}`, cx, cy - 6);
         ctx.font = '500 13px Arial';
         ctx.fillStyle = '#9fbfe8';
-        ctx.fillText(`${percent}% responderam tudo`, cx, cy + 16);
+        ctx.fillText(`${percent}% Concluídos`, cx, cy + 16);
 
         // legenda simples abaixo do gráfico (desenhada no próprio canvas)
         const legendY = h - 18;
@@ -110,7 +110,7 @@
         ctx.fillStyle = '#fff';
         ctx.font = '12px Arial';
         ctx.textAlign = 'left';
-        ctx.fillText(`Completo: ${completed}`, padLeft + boxSize + 8, legendY + 2);
+        ctx.fillText(`Concluídos: ${completed}`, padLeft + boxSize + 8, legendY + 2);
         // remaining legend
         const remX = padLeft + 140;
         ctx.fillStyle = 'rgba(70,78,86,0.45)';
