@@ -40,8 +40,16 @@
             <section class="detail card">
                 <div class="label small">Detalhes do respondente</div>
                 <h2 id="respondentName">Selecione um item à esquerda</h2>
+            
+                <div id="userInfo" class="user-info" style="margin-bottom:12px; display:none;">
+                    <div style="font-size:13px; color:var(--muted); margin-bottom:6px;">Dados do usuário</div>
+                    <div><strong>Nome:</strong> <span id="userName">—</span></div>
+                    <div style="margin-top:4px;"><strong>Email:</strong> <a id="userEmail" href="mailto:" target="_blank">—</a></div>
+                </div>
+            
                 <div id="answersList" class="answers"></div>
             </section>
+
         </main>
 
         <footer class="foot">Painel admin • AS — Sistema &amp; Gestão &amp; Performance</footer>
