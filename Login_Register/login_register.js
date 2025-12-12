@@ -93,9 +93,19 @@ function redirectAfterLogin(token) {
 formLogin.addEventListener('submit', async (e) => {
     e.preventDefault();
     loginMsg.textContent = '';
+
     const nome = qs('#login-nome').value.trim();
     const senha = qs('#login-senha').value;
     if (!nome || !senha) { loginMsg.textContent = 'Preencha nome e senha.'; return; }
+
+    // botão de submit do form de login
+    const submitBtn = formLogin.querySelector('button[type="submit"]');
+    const originalText = submitBtn ? submitBtn.innerText : null;
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Logando…'; // texto mostrado enquanto autentica
+        submitBtn.setAttribute('aria-busy', 'true');
+    }
 
     try {
         const password = senha;
@@ -109,24 +119,41 @@ formLogin.addEventListener('submit', async (e) => {
         const body = await safeJson(res);
         if (!res.ok) {
             loginMsg.textContent = body && body.Mensagem ? body.Mensagem : (body && body.message) || 'Falha ao autenticar';
+            // restaura botão para permitir nova tentativa
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalText;
+                submitBtn.removeAttribute('aria-busy');
+            }
             return;
         }
 
         const token = body && (body.token || body.Token || body.tokenJwt || body.accessToken);
         if (!token) {
             loginMsg.textContent = 'Autenticado, mas token não retornado pelo servidor.';
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalText;
+                submitBtn.removeAttribute('aria-busy');
+            }
             return;
         }
 
         localStorage.setItem('token', token);
-        // novo: redireciona com base na role
+        // redireciona com base na role (vai navegar — não precisa restaurar o botão)
         redirectAfterLogin(token);
 
     } catch (err) {
         console.error(err);
         loginMsg.textContent = 'Erro de rede. Veja console.';
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = originalText;
+            submitBtn.removeAttribute('aria-busy');
+        }
     }
 });
+
 
 /* ========== REGISTER ========== */
 formRegister.addEventListener('submit', async (e) => {
